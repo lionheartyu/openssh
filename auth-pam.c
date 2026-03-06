@@ -1205,8 +1205,8 @@ do_pam_chauthtok(void)
 void
 do_pam_session(struct ssh *ssh)
 {
-	if (loginmsg)
-    sshbuf_reset(loginmsg); // 清空认证阶段的消息，避免 session 阶段重复输出
+	// if (loginmsg)
+    // sshbuf_reset(loginmsg); // 清空认证阶段的消息，避免 session 阶段重复输出
 	debug3("PAM: opening session");
 
 	expose_authinfo(__func__);
