@@ -411,20 +411,20 @@ userauth_finish(struct ssh *ssh, int authenticated, const char *packet_method,
 		int r, success = mm_do_pam_account();
 
 		/* If PAM returned a message, send it to the user. */
-		// if (sshbuf_len(loginmsg) > 0) {
-		// 	if ((r = sshbuf_put(loginmsg, "\0", 1)) != 0)
-		// 		fatal("%s: buffer error: %s",
-		// 		    __func__, ssh_err(r));
-		// 	userauth_send_banner(ssh, sshbuf_ptr(loginmsg));
-		// 	if ((r = ssh_packet_write_wait(ssh)) != 0) {
-		// 		sshpkt_fatal(ssh, r,
-		// 		    "%s: send PAM banner", __func__);
-		// 	}
-		// }
-		// if (!success) {
-		// 	fatal("Access denied for user %s by PAM account "
-		// 	    "configuration", authctxt->user);
-		// }
+		if (sshbuf_len(loginmsg) > 0) {
+			if ((r = sshbuf_put(loginmsg, "\0", 1)) != 0)
+				fatal("%s: buffer error: %s",
+				    __func__, ssh_err(r));
+			userauth_send_banner(ssh, sshbuf_ptr(loginmsg));
+			if ((r = ssh_packet_write_wait(ssh)) != 0) {
+				sshpkt_fatal(ssh, r,
+				    "%s: send PAM banner", __func__);
+			}
+		}
+		if (!success) {
+			fatal("Access denied for user %s by PAM account "
+			    "configuration", authctxt->user);
+		}
 	}
 #endif
 
