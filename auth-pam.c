@@ -638,11 +638,10 @@ sshpam_store_conv(int n, sshpam_const struct pam_message **msg,
 		switch (PAM_MSG_MEMBER(msg, i, msg_style)) {
 		case PAM_ERROR_MSG:
 		case PAM_TEXT_INFO:
-			/* Do not write session phase PAM messages to loginmsg to avoid duplicate output */
-			// if ((r = sshbuf_putf(loginmsg, "%s\n",
-			//     PAM_MSG_MEMBER(msg, i, msg))) != 0)
-			//     fatal("%s: buffer error: %s",
-			//         __func__, ssh_err(r));
+			if ((r = sshbuf_putf(loginmsg, "%s\n",
+			    PAM_MSG_MEMBER(msg, i, msg))) != 0)
+			    fatal("%s: buffer error: %s",
+			        __func__, ssh_err(r));
 			reply[i].resp_retcode = PAM_SUCCESS;
 			break;
 		default:
@@ -1206,6 +1205,8 @@ do_pam_chauthtok(void)
 void
 do_pam_session(struct ssh *ssh)
 {
+	if (loginmsg)
+    sshbuf_reset(loginmsg); // 清空认证阶段的消息，避免 session 阶段重复输出
 	debug3("PAM: opening session");
 
 	expose_authinfo(__func__);
