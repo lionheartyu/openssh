@@ -638,10 +638,11 @@ sshpam_store_conv(int n, sshpam_const struct pam_message **msg,
 		switch (PAM_MSG_MEMBER(msg, i, msg_style)) {
 		case PAM_ERROR_MSG:
 		case PAM_TEXT_INFO:
-			if ((r = sshbuf_putf(loginmsg, "%s\n",
-			    PAM_MSG_MEMBER(msg, i, msg))) != 0)
-				fatal("%s: buffer error: %s",
-				    __func__, ssh_err(r));
+			/* Do not write session phase PAM messages to loginmsg to avoid duplicate output */
+			// if ((r = sshbuf_putf(loginmsg, "%s\n",
+			//     PAM_MSG_MEMBER(msg, i, msg))) != 0)
+			//     fatal("%s: buffer error: %s",
+			//         __func__, ssh_err(r));
 			reply[i].resp_retcode = PAM_SUCCESS;
 			break;
 		default:
