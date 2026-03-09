@@ -409,7 +409,6 @@ userauth_finish(struct ssh *ssh, int authenticated, const char *packet_method,
 #ifdef USE_PAM
 	if (options.use_pam && authenticated) {
 		int r, success = mm_do_pam_account();
-userauth_send_banner(ssh, sshbuf_ptr(loginmsg));
 		/* If PAM returned a message, send it to the user. */
 		if (sshbuf_len(loginmsg) > 0) {
 			if ((r = sshbuf_put(loginmsg, "\0", 1)) != 0)
